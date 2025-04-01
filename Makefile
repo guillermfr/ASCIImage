@@ -30,9 +30,10 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 dirs:
-	mkdir -p $(BINDIR) $(OBJ) $(DATA)
+	mkdir -p $(BINDIR) $(OBJ)
+#	mkdir -p $(BINDIR) $(OBJ) $(DATA)
 
 clean:
 	$(RM) $(BINDIR) || echo Rien à supprimer dans bin
 	$(RM) $(OBJ) || echo Rien à supprimer dans obj
-	$(RM) $(DATA) || echo Rien à supprimer dans data
+#	$(RM) $(DATA) || echo Rien à supprimer dans data
