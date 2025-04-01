@@ -4,5 +4,6 @@
 #include "includes.h"
 
 // Déclaration du prototype des fonctions
+void convertToGrayscale(FILE* fIn, FILE* fOut);
 
 #endif
