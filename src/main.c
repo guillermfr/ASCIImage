@@ -1,11 +1,19 @@
 #include "header.h"
 
+char imgToAscii(int value) {
+    char ascii[] = {' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'};
+    return ascii[value/25];
+}
+
 int main(int argc, char** argv) {
 
-    FILE* fIn = fopen("data/image.bmp", "r");
+    FILE* fIn = fopen("data/sample1.bmp", "r");
     FILE* fOut = fopen("data/image_gray.bmp", "w+");
+    FILE* txt = fopen("data/image.txt", "w+");
+    FILE* small = fopen("data/small.bmp", "w+");
 
     int i, y;
+    char c;
     unsigned char byte[54];
 
     if(fIn == NULL) {
@@ -18,9 +26,8 @@ int main(int argc, char** argv) {
 
     fwrite(byte, sizeof(unsigned char), 54, fOut);
 
-    int height = *(int*)&byte[18];
-    int width = *(int*)&byte[22];
-    int bitDepth = *(int*)&byte[28];
+    int width = *(int*)&byte[18];
+    int height = *(int*)&byte[22];
     int size = height * width;
 
     printf("width: %d\n", width);
@@ -40,10 +47,61 @@ int main(int argc, char** argv) {
         putc(y, fOut);
         putc(y, fOut);
         putc(y, fOut);
+
+        c = imgToAscii(y);
+        putc(c, txt);
+
+        if((i+1) % width == 0) {
+            putc('\n', txt);
+        }
     }
+
+    int scaleFactor = 4;
+    int newWidth = width / scaleFactor;
+    int newHeight = height / scaleFactor;
+
+    *(int*)&byte[18] = newWidth;
+    *(int*)&byte[22] = newHeight;
+
+    fwrite(byte, sizeof(unsigned char), 54, small);
+
+    int rowSize = (3 * width + 3) & (~3);
+    int newRowSize = (3 * newWidth + 3) & (~3);
+
+    unsigned char* row = (unsigned char*)malloc(rowSize);
+    unsigned char* newRow = (unsigned char*)malloc(newRowSize);
+
+    for(int y=0; y<newHeight; y++) {
+        for(int x=0; x<newWidth; x++) {
+            int r = 0, g = 0, b = 0;
+
+            for(int j=0; j<scaleFactor; j++) {
+                fseek(fIn, 54 + (y * scaleFactor + j) * rowSize + (x * scaleFactor) * 3, SEEK_SET);
+                fread(row, sizeof(unsigned char), 3, fIn);
+                b += row[0];
+                g += row[1];
+                r += row[2];
+            }
+
+            b /= (scaleFactor * scaleFactor);
+            g /= (scaleFactor * scaleFactor);
+            r /= (scaleFactor * scaleFactor);
+
+            newRow[x * 3] = b;
+            newRow[x * 3 + 1] = g;
+            newRow[x * 3 + 2] = r;
+        }
+
+        fwrite(newRow, sizeof(unsigned char), newRowSize, small);
+    }
+
+    free(row);
+    free(newRow);
 
     fclose(fIn);
     fclose(fOut);
+    fclose(txt);
+    fclose(small);
 
     return 0;
 }
