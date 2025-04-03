@@ -1,5 +1,8 @@
 #include "resize.h"
 
+// BUG
+// With rectangle images, there's a weird offset
+
 void resize(FILE* fIn, FILE* fOut, int scaleFactor) {
 
     int i;
@@ -26,25 +29,31 @@ void resize(FILE* fIn, FILE* fOut, int scaleFactor) {
     unsigned char* row = (unsigned char*)malloc(rowSize);
     unsigned char* newRow = (unsigned char*)malloc(newRowSize);
 
-    for(int y=0; y<newHeight; y++) {
-        for(int x=0; x<newWidth; x++) {
+    for(int y=0; y<height; y+=scaleFactor) {
+
+        fseek(fIn, 54 + (y * rowSize), SEEK_SET);
+        fread(row, sizeof(unsigned char), rowSize, fIn);
+
+        for(int x=0; x<width; x+=scaleFactor) {
             int r = 0, g = 0, b = 0;
 
-            for(int j=0; j<scaleFactor; j++) {
-                fseek(fIn, 54 + (y * scaleFactor + j) * rowSize + (x * scaleFactor) * 3, SEEK_SET);
-                fread(row, sizeof(unsigned char), 3, fIn);
-                b += row[0];
-                g += row[1];
-                r += row[2];
-            }
+            for (int j = 0; j < scaleFactor; j++) {
+                for (int i = 0; i < scaleFactor; i++) {
+                    int pixelIndex = ((x + i) * 3);
+                    b += row[pixelIndex + 0];
+                    g += row[pixelIndex + 1];
+                    r += row[pixelIndex + 2];
+                }
+        }
 
             b /= (scaleFactor * scaleFactor);
             g /= (scaleFactor * scaleFactor);
             r /= (scaleFactor * scaleFactor);
 
-            newRow[x * 3] = b;
-            newRow[x * 3 + 1] = g;
-            newRow[x * 3 + 2] = r;
+            int newIndex = (x / scaleFactor) * 3;
+            newRow[newIndex + 0] = b;
+            newRow[newIndex + 1] = g;
+            newRow[newIndex + 2] = r;
         }
 
         fwrite(newRow, sizeof(unsigned char), newRowSize, fOut);
