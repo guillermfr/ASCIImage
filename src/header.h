@@ -5,4 +5,8 @@
 
 #include "includes.h"
 
+#include "resize.h"
+#include "imgToGrayscale.h"
+#include "imgToAscii.h"
+
 #endif
