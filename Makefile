@@ -3,6 +3,7 @@ CC=gcc
 CP=cp
 CFLAGS=-Wall
 RM=rm -r
+LDFLAGS=-ljpeg
 
 #nom des dossiers
 SRC=src
@@ -24,7 +25,7 @@ BIN=$(BINDIR)/main
 all: dirs $(BIN)
 
 $(BIN): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@
+	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
