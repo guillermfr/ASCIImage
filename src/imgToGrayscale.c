@@ -2,37 +2,26 @@
 
 void convertToGrayscale(FILE* fIn, FILE* fOut) {
 
-    int i, y;
-    unsigned char byte[54];
+    unsigned char header[54];
+    fread(header, sizeof(unsigned char), 54, fIn);
+    fwrite(header, sizeof(unsigned char), 54, fOut);
 
-    if(fIn == NULL) {
-        printf("File does not exist\n");
-    }
+    int width = *(int*)&header[18];
+    int height = abs(*(int*)&header[22]);
+    int stride = (width * 3 + 3) & ~3;
+    int padding = stride - width * 3;
 
-    for(i=0; i<54; i++) {
-        byte[i] = getc(fIn);
-    }
+    unsigned char pixel[3];
 
-    fwrite(byte, sizeof(unsigned char), 54, fOut);
-
-    int width = *(int*)&byte[18];
-    int height = *(int*)&byte[22];
-    int size = height * width;
-
-    unsigned char buffer[size][3];
-
-    for(i=0; i<size; i++) {
-
-        y = 0;
-        buffer[i][0] = getc(fIn);
-        buffer[i][1] = getc(fIn);
-        buffer[i][2] = getc(fIn);
-
-        y = (buffer[i][0] * 0.3) + (buffer[i][1] * 0.59) + (buffer[i][2] * 0.11);
-
-        putc(y, fOut);
-        putc(y, fOut);
-        putc(y, fOut);
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            fread(pixel, 3, 1, fIn);
+            unsigned char gray = pixel[0] * 0.3 + pixel[1] * 0.58 + pixel[2] * 0.11;
+            memset(pixel, gray, sizeof(pixel));
+            fwrite(&pixel, 3, 1, fOut);
+        }
+        fread(pixel, padding, 1, fIn);
+        fwrite(pixel, padding, 1, fOut);
     }
 
 }
