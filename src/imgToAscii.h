@@ -4,6 +4,7 @@
 #include "includes.h"
 
 // Déclaration du prototype des fonctions
-char imgToAscii(int value);
+char pxlToAscii(int value);
+void imgToAscii(FILE* fIn, FILE* fOut);
 
 #endif
