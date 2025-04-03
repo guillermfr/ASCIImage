@@ -5,6 +5,9 @@
 
 void resize(FILE* fIn, FILE* fOut, int scaleFactor) {
 
+    rewind(fIn);
+    rewind(fOut);
+
     int i;
     unsigned char byte[54];
 
@@ -18,13 +21,18 @@ void resize(FILE* fIn, FILE* fOut, int scaleFactor) {
     int newWidth = width / scaleFactor;
     int newHeight = height / scaleFactor;
 
-    *(int*)&byte[18] = newWidth;
-    *(int*)&byte[22] = newHeight;
-
-    fwrite(byte, sizeof(unsigned char), 54, fOut);
-
     int rowSize = (3 * width + 3) & (~3);
     int newRowSize = (3 * newWidth + 3) & (~3);
+
+    int imageSize = newRowSize * newHeight;
+    int fileSize = imageSize + 54;
+
+    *(int*)&byte[18] = newWidth;
+    *(int*)&byte[22] = newHeight;
+    *(int*)&byte[34] = imageSize;
+    *(int*)&byte[2] = fileSize;
+
+    fwrite(byte, sizeof(unsigned char), 54, fOut);
 
     unsigned char* row = (unsigned char*)malloc(rowSize);
     unsigned char* newRow = (unsigned char*)malloc(newRowSize);
@@ -61,5 +69,7 @@ void resize(FILE* fIn, FILE* fOut, int scaleFactor) {
 
     free(row);
     free(newRow);
+
+    rewind(fIn);
 
 }
