@@ -50,7 +50,7 @@ fi
 # Transform video to images
 echo "Transforming video to images..."
 
-fps=1
+fps=20
 ffmpegErrorFile=data/ffmpegErrors.txt
 ffmpeg -i "$vidDir/"*.$ext -vf fps=$fps "$imgDir/%06d.jpg" > /dev/null 2>$ffmpegErrorFile
 
@@ -68,7 +68,9 @@ fi
 echo "Resizing images..."
 
 resizeErrorFile=data/resizeErrors.txt
-mogrify -resize 200x200\> "$imgDir/*.jpg" > /dev/null 2>$resizeErrorFile
+height=60
+width=$((height * 2))
+mogrify -resize "${width}x${height}>" "$imgDir/*.jpg" > /dev/null 2>$resizeErrorFile
 
 # Check if the resizing was successful
 if [ -f $testFile ]; then
