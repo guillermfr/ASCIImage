@@ -63,3 +63,17 @@ else
     echo "Error transforming video to images. Check $ffmpegErrorFile for details."
     exit 1
 fi
+
+# Resize images
+echo "Resizing images..."
+
+resizeErrorFile=data/resizeErrors.txt
+mogrify -resize 200x200\> "$imgDir/*.jpg" > /dev/null 2>$resizeErrorFile
+
+# Check if the resizing was successful
+if [ -f $testFile ]; then
+    echo "Images resized successfully."
+else
+    echo "Error resizing images. Check $resizeErrorFile for details."
+    exit 1
+fi
