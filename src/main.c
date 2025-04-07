@@ -2,15 +2,26 @@
 
 int main(int argc, char** argv) {
 
-    FILE* inputImage = fopen("data/test.jpg", "rb");
-    FILE* asciiImage = fopen("data/image.txt", "w+");
+    // Verify the number of arguments
+    if(argc != 3) {
+        printf("The number of arguments is incorrect. There should be exactly 2 arguments\n");
+        printf("Usage: bin/main inputFile.jpg outputFile.txt\n");
+        return 1;
+    }
 
-    if(inputImage == NULL) {
+    // Open the input and output files
+    FILE* inputImage = fopen(argv[1], "rb");
+    FILE* asciiImage = fopen(argv[2], "w+");
+
+    // Check if the files were opened successfully
+    if(inputImage == NULL || asciiImage == NULL) {
         printf("File does not exist\n");
     }
     
-    imgToAscii2(inputImage, asciiImage);
+    // Convert the image to ASCII
+    imgToAscii(inputImage, asciiImage);
 
+    // Close the files
     fclose(inputImage);
     fclose(asciiImage);
 
