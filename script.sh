@@ -77,3 +77,24 @@ else
     echo "Error resizing images. Check $resizeErrorFile for details."
     exit 1
 fi
+
+# Create text files from images
+echo "Creating text files from images..."
+
+make > /dev/null 2>&1
+
+for img in $imgDir/*.jpg; do
+    baseName=$(basename "$img" .jpg)
+    textFile="$textDir/$baseName.txt"
+    bin/main "$img" "$textFile" > /dev/null 2>$errorDir/$baseName.txt
+done
+
+# Check if the text files were created successfully
+testTextFile=$textDir/000001.txt
+
+if [ -f $testTextFile ]; then
+    echo "Text files created successfully."
+else
+    echo "Error creating text files. Check $errorDir for details."
+    exit 1
+fi
