@@ -35,7 +35,7 @@ cd ASCIImage
 2. Convert your YouTube video to text files that will later be displayed by the script
 
 ```bash
-bash [script.sh](http://_vscodecontentref_/1) <YouTube URL>
+bash ./script.sh <YouTube URL>
 ```
 
 Replace `<YouTube URL>` with the link to the YouTube video you want to convert.
@@ -49,7 +49,7 @@ Replace `<YouTube URL>` with the link to the YouTube video you want to convert.
 5. Display your ASCII art and enjoy !
 
 ```bash
-bash [display.sh](http://_vscodecontentref_/2)
+bash ./display.sh
 ```
 
 # Example
@@ -57,9 +57,9 @@ bash [display.sh](http://_vscodecontentref_/2)
 Here’s an example of how to use ASCIImage:
 
 ```bash
-bash [script.sh](http://_vscodecontentref_/3) https://www.youtube.com/watch?v=dQw4w9WgXcQ
+bash ./script.sh https://www.youtube.com/watch?v=dQw4w9WgXcQ
 # Wait for the process to finish
-bash [display.sh](http://_vscodecontentref_/4)
+bash ./display.sh
 ```
 
 This will download the video, convert it into ASCII art, and display it in your terminal.
