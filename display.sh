@@ -3,7 +3,7 @@
 clear
 
 txtImgDir=data/textFiles
-frameDelay=0.0333
+frameDelay=0.05
 
 for img in $txtImgDir/*.txt; do
     tput cup 0 0
