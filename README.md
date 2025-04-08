@@ -44,7 +44,7 @@ Replace `<YouTube URL>` with the link to the YouTube video you want to convert.
 
 4. (Optional but recommanded) Adjust your terminal preferences for better display:
 
-* In your terminal preferences, create a profile with **1.40 width cell spacing** for optimal ASCII art rendering.
+    * In your terminal preferences, create a profile with **1.40 width cell spacing** for optimal ASCII art rendering.
 
 5. Display your ASCII art and enjoy !
 
