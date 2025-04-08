@@ -50,7 +50,7 @@ fi
 # Transform video to images
 echo "Transforming video to images..."
 
-fps=20
+fps=30
 ffmpegErrorFile=data/ffmpegErrors.txt
 ffmpeg -i "$vidDir/"*.$ext -vf fps=$fps "$imgDir/%06d.jpg" > /dev/null 2>$ffmpegErrorFile
 
@@ -100,3 +100,5 @@ else
     echo "Error creating text files. Check $errorDir for details."
     exit 1
 fi
+
+echo "Script completed successfully at $(date)."
